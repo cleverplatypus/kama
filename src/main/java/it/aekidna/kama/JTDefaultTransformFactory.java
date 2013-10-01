@@ -32,7 +32,7 @@ public class JTDefaultTransformFactory implements IJTTransformFactory {
 	{
 		if( aliases.containsKey(inName))
 			throw new RuntimeException("Attempt to override alias '" + inName +"'");
-		if( !inClass.isAssignableFrom(IJTTransform.class) && !inClass.isAssignableFrom(IJTTransformSetupDelegate.class))
+		if( !IJTTransform.class.isAssignableFrom( inClass ) && !IJTTransformSetupDelegate.class.isAssignableFrom( inClass ))
 			throw new RuntimeException("Attempt to add an alias of class'" + inClass.getCanonicalName() +"' " +
 					"that is neither a IJTTransform nor a IJTTransformSetupDelegate implementation");
 		aliases.put( inName, inClass );
@@ -44,6 +44,7 @@ public class JTDefaultTransformFactory implements IJTTransformFactory {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode node = null;
 		try {
+			System.out.println("Returning transformer from file '" + inPath +"'");
 			node = (ObjectNode) mapper.readTree( JTDefaultTransformFactory.class.getClassLoader().getResource( inPath ).openStream());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -76,19 +77,21 @@ public class JTDefaultTransformFactory implements IJTTransformFactory {
 		if( clazz != null)
 		{
 			try {
-				if( clazz.isAssignableFrom( IJTTransform.class ) )
+				if( IJTTransform.class.isAssignableFrom( clazz ) )
 				{
 					IJTTransform transform = null;
 						transform = (IJTTransform) clazz.newInstance();
 						setup = new JTTransformationSetup( transform, transform.parseConfig(inNode));
 				}
-				else if( clazz.isAssignableFrom( IJTTransformSetupDelegate.class ) )
+				else if( IJTTransformSetupDelegate.class.isAssignableFrom( clazz ) )
 				{
 					setup = ((IJTTransformSetupDelegate) clazz.newInstance()).setupTransform( this, inNode);
 				}
 				else
 				{
-					throw new RuntimeException( "Provided qualifier is neither a IJTTransform nor a IJTTransformSetupDelegate implementation" );
+					throw new RuntimeException( "Provided qualifier '"
+							+ qualifier + "' is neither a IJTTransform " +
+							"nor a IJTTransformSetupDelegate implementation" );
 				}
 			} catch (InstantiationException e) {
 				e.printStackTrace();
@@ -100,6 +103,7 @@ public class JTDefaultTransformFactory implements IJTTransformFactory {
 		{
 			throw new RuntimeException("unknown transformation qualifier: " + qualifier );
 		}
+		setup.getTransform().setup(this);
 		return setup;
 	}
 
