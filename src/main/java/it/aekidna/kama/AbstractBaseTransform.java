@@ -8,7 +8,7 @@ import it.aekidna.kama.api.IJTTransformFactory;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
 
-public abstract class AbstractBaseTransform implements IJTTransform 
+public abstract class AbstractBaseTransform implements IJTTransform
 {
 	protected IJTTransformFactory factory;
 
