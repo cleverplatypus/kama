@@ -28,7 +28,17 @@ public class JTDefaultTransformFactory implements IJTTransformFactory {
 		aliases.put("sub", SubTransformSetupDelegate.class);
 	}
 	
-	public void addAlias( String inName, Class<?> inClass )
+	public void addTransformAlias( String inName, Class<? extends IJTTransform> inClass )
+	{
+		if( aliases.containsKey(inName))
+			throw new RuntimeException("Attempt to override alias '" + inName +"'");
+		if( !IJTTransform.class.isAssignableFrom( inClass ) && !IJTTransformSetupDelegate.class.isAssignableFrom( inClass ))
+			throw new RuntimeException("Attempt to add an alias of class'" + inClass.getCanonicalName() +"' " +
+					"that is neither a IJTTransform nor a IJTTransformSetupDelegate implementation");
+		aliases.put( inName, inClass );
+	}
+	
+	public void addTransformDelegateAlias( String inName, Class<? extends IJTTransformSetupDelegate> inClass )
 	{
 		if( aliases.containsKey(inName))
 			throw new RuntimeException("Attempt to override alias '" + inName +"'");
