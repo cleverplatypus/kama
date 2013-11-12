@@ -18,7 +18,6 @@ public class HashTransform extends AbstractBaseTransform {
 	@Override
 	public JsonNode transform(IJTTransformConfig inConfig,
 			IJTLocation inSourceLocation, IJTLocation inTargetLocation) {
-		System.out.println("HashTransform");
 		IJTTransformContainerConfig config = (IJTTransformContainerConfig) inConfig;
 		ObjectMapper mapper = new ObjectMapper();
 		List<ObjectNode> entries = config.getEntries();

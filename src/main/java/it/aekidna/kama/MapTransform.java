@@ -16,7 +16,6 @@ public class MapTransform extends AbstractBaseTransform {
 	public JsonNode transform(IJTTransformConfig inConfig,
 			IJTLocation inSourceLocation, IJTLocation inTargetLocation) 
 	{
-		System.out.println("MapTransform");
 		ObjectMapper mapper = new ObjectMapper();
 		IJTLocation targetLocation = inTargetLocation;
 		if( targetLocation == null )

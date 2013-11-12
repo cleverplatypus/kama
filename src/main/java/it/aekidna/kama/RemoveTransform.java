@@ -18,7 +18,6 @@ public class RemoveTransform extends AbstractBaseTransform {
 			IJTLocation inSourceLocation, IJTLocation inTargetLocation) 
 	{
 		RemoveConfig config = (RemoveConfig) inConfig;
-		System.out.println("RemoveTransform");
 		ContainerNode parent = (ContainerNode) inSourceLocation.getCurrentValue( config.getSource());
 		for( Object key : config.getKeys())
 		{

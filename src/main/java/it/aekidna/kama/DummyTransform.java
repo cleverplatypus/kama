@@ -6,27 +6,14 @@ import it.aekidna.kama.api.IJTTransformConfig;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
 
-public class CopyTransform extends AbstractBaseTransform
+public class DummyTransform extends AbstractBaseTransform
 {
 
 	@Override
 	public JsonNode transform( IJTTransformConfig inConfig,
 			IJTLocation inSourceLocation, IJTLocation inTargetLocation )
 	{
-		JsonNode out = inSourceLocation.getCurrentValue( inConfig.getSource() );
-		if ( inConfig.returnsNewValue() )
-		{
-			return out;
-		}
-		else if ( inTargetLocation != null && inConfig.shouldMerge() )
-		{
-			inTargetLocation.setValue( inConfig.getTarget(), out );
-			return inSourceLocation.getCurrentValue();
-		}
-		else
-		{
-			return out;
-		}
+		return inSourceLocation.getCurrentValue();
 	}
 
 	@Override
