@@ -53,8 +53,8 @@ public class JTLocation implements IJTLocation
 	{
 		if ( inPath == null || inPath.equals( "" ) )
 			return new JTLocation( baseNode, basePath, ancestry );
-
-		return null;
+		else
+			return new JTLocation( baseNode, inPath, ancestry );
 	}
 
 	@Override
@@ -169,6 +169,19 @@ public class JTLocation implements IJTLocation
 	public IJTLocation swapTip( JsonNode inNewTip )
 	{
 		return new JTLocation( inNewTip, null, ancestry );
+	}
+
+	@Override
+	public boolean pathExists( String inPath )
+	{
+		try
+		{
+			return resolveNode( baseNode, inPath, ancestry, false ) != null;
+		}
+		catch ( Exception exc )
+		{
+			return false;
+		}
 	}
 
 }

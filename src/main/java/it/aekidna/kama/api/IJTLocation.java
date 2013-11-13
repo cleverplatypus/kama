@@ -15,6 +15,8 @@ public interface IJTLocation
 
 	public void setValue( String inPath, JsonNode inValue );
 
+	public boolean pathExists( String inPath );
+
 	public IJTLocation getSubLocation( String inPath, boolean inForceCreate );
 
 	public IJTLocation getSubLocation( List<ContainerNode> inDescendentNodes,

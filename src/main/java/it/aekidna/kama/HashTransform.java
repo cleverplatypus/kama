@@ -13,40 +13,48 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
 
-public class HashTransform extends AbstractBaseTransform {
-	
+public class HashTransform extends AbstractBaseTransform
+{
+
 	@Override
-	public JsonNode transform(IJTTransformConfig inConfig,
-			IJTLocation inSourceLocation, IJTLocation inTargetLocation) {
+	public JsonNode transform( IJTTransformConfig inConfig,
+			IJTLocation inSourceLocation, IJTLocation inTargetLocation )
+	{
 		IJTTransformContainerConfig config = (IJTTransformContainerConfig) inConfig;
 		ObjectMapper mapper = new ObjectMapper();
 		List<ObjectNode> entries = config.getEntries();
 		ObjectNode hash = mapper.createObjectNode();
-		for( Iterator<ObjectNode> iter = entries.iterator(); iter.hasNext(); )
+		for ( Iterator<ObjectNode> iter = entries.iterator(); iter.hasNext(); )
 		{
-			ObjectNode entry  = iter.next();
-			IJTTransformationSetup transformerSetup = factory.resolveTransform( entry );
+			ObjectNode entry = iter.next();
+			IJTTransformationSetup transformerSetup = factory
+					.resolveTransform( entry );
 			IJTTransform transformer = transformerSetup.getTransform();
+			String targetPath = transformerSetup.getConfig().getTarget();
 			IJTLocation targetLocation;
-			if( inTargetLocation != null )
-				targetLocation = inTargetLocation.getSubLocation(null, hash);
+			if ( inTargetLocation != null )
+				targetLocation = inTargetLocation.getSubLocation( null, hash )
+						.getSubLocation( targetPath, true );
 			else
-				targetLocation = new JTLocation(hash);
-			JsonNode result = transformer.transform( 
-					transformerSetup.getConfig(),
-					inSourceLocation,
-					targetLocation
-					);
-			if( transformerSetup.getConfig().shouldReplace() )
-				throw new RuntimeException( "cannot use target=\".\" on hash transform child" );
-			else if( targetLocation != null && transformerSetup.getConfig().shouldMerge() )
-				targetLocation.setValue(transformerSetup.getConfig().getTarget(), result);
+				targetLocation = new JTLocation( hash ).getSubLocation(
+						targetPath, true );
+			JsonNode result = transformer.transform(
+					transformerSetup.getConfig(), inSourceLocation,
+					targetLocation );
+			if ( transformerSetup.getConfig().shouldReplace() )
+				throw new RuntimeException(
+						"cannot use target=\".\" on hash transform child" );
+			else if ( targetLocation != null
+					&& transformerSetup.getConfig().shouldMerge() )
+				targetLocation.setValue( transformerSetup.getConfig()
+						.getTarget(), result );
 		}
 		return hash;
 	}
 
 	@Override
-	public IJTTransformConfig parseConfig(ObjectNode inNode) {
+	public IJTTransformConfig parseConfig( ObjectNode inNode )
+	{
 		return new BaseContainerTransformConfig( inNode );
 	}
 
